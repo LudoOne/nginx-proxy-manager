@@ -62,11 +62,11 @@ app.use(require('./lib/express/jwt')());
 /**
  * Routes
  */
-app.use('/assets', express.static('dist/assets'));
-app.use('/css', express.static('dist/css'));
-app.use('/fonts', express.static('dist/fonts'));
-app.use('/images', express.static('dist/images'));
-app.use('/js', express.static('dist/js'));
+app.use('/assets', express.static('frontend/assets'));
+app.use('/css', express.static('frontend/css'));
+app.use('/fonts', express.static('frontend/fonts'));
+app.use('/images', express.static('frontend/images'));
+app.use('/js', express.static('frontend/js'));
 app.use('/api', require('./routes/api/main'));
 app.use('/', require('./routes/main'));
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const fs      = require('fs');
-const PACKAGE = require('../../../package.json');
+const PACKAGE = require('../package.json');
 const path    = require('path')
 
 const router = express.Router({
