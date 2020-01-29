@@ -37,6 +37,9 @@ ADD frontend/dist       /app/frontend
 WORKDIR /app
 RUN yarn install
 
+# Remove frontend service not required for prod, dev nginx config as well
+RUN rm -rf /etc/services.d/frontend
+
 VOLUME [ "/data", "/etc/letsencrypt" ]
 CMD [ "/init" ]
 
