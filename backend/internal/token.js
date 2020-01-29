@@ -61,7 +61,7 @@ module.exports = {
                                                 },
                                                 scope: [data.scope]
                                             }, {
-                                                expiresIn: expiry.unix()
+                                                expires: expiry.unix()
                                             })
                                                 .then(signed => {
                                                     return {

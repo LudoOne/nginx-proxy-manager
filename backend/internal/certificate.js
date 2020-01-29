@@ -11,7 +11,7 @@ const debug_mode       = process.env.NODE_ENV !== 'production' || !!process.env.
 const le_staging       = process.env.NODE_ENV !== 'production';
 const internalNginx    = require('./nginx');
 const internalHost     = require('./host');
-const certbot_command  = '/usr/bin/certbot';
+const certbot_command  = '/usr/local/bin/certbot-auto';
 
 function omissions() {
     return ['is_deleted'];
