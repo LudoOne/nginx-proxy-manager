@@ -11,6 +11,7 @@ pipeline {
 		BUILD_VERSION              = getVersion()
 		MAJOR_VERSION              = "2"
 		COMPOSE_PROJECT_NAME       = "npm_${GIT_BRANCH}_${BUILD_NUMBER}"
+		COMPOSE_FILE               = 'docker/docker-compose.ci.yml'
 		COMPOSE_INTERACTIVE_NO_CLI = 1
 		BUILDX_NAME                = "${COMPOSE_PROJECT_NAME}"
 		BRANCH_LOWER               = "${BRANCH_NAME.toLowerCase()}"
@@ -27,7 +28,7 @@ pipeline {
 			steps {
 				ansiColor('xterm') {
 					sh '''docker build --pull --no-cache --squash --compress \\
-						-t ${IMAGE}:ci-${BUILD_NUMBER} \\
+						-t "${IMAGE}:ci-${BUILD_NUMBER}" \\
 						-f docker/Dockerfile \\
 						--build-arg TARGETPLATFORM=linux/amd64 \\
 						--build-arg BUILDPLATFORM=linux/amd64 \\
@@ -36,6 +37,32 @@ pipeline {
 						--build-arg BUILD_DATE="$(date '+%Y-%m-%d %T %Z')" \\
 						.
 					'''
+				}
+			}
+		}
+		stage('Test') {
+			steps {
+				ansiColor('xterm') {
+					// Bring up a stack
+					sh 'docker-compose up -d fullstack'
+					sleep 10
+					// Run tests
+					sh 'rm -rf test/results'
+					sh 'docker-compose up --force-recreate cypress'
+					// Get results
+					sh 'docker cp -L "$(docker-compose ps -q cypress):/results" test/'
+				}
+			}
+			post {
+				always {
+					junit 'test/results/junit/*'
+					// Cypress videos and screenshot artifacts
+					dir(path: 'test/results') {
+						archiveArtifacts allowEmptyArchive: true, artifacts: '**/*', excludes: '**/*.xml'
+					}
+					// Dumps to analyze later
+					sh 'mkdir -p debug'
+					sh 'docker-compose logs fullstack | gzip > debug/docker_fullstack.log.gz'
 				}
 			}
 		}
@@ -68,7 +95,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Test') {
+		stage('TestBuildX') {
 			when {
 				allOf {
 					branch 'docker-multi'
@@ -110,6 +137,11 @@ pipeline {
 		}
 	}
 	post {
+		always {
+			sh 'docker-compose down -v --remove-orphans'
+			sh 'echo Reverting ownership'
+			sh 'docker run --rm -v $(pwd):/data ${DOCKER_CI_TOOLS} chown -R $(id -u):$(id -g) /data'
+		}
 		success {
 			juxtapose event: 'success'
 			sh 'figlet "SUCCESS"'
@@ -118,9 +150,8 @@ pipeline {
 			juxtapose event: 'failure'
 			sh 'figlet "FAILURE"'
 		}
-		always {
-			sh 'echo Reverting ownership'
-			sh 'docker run --rm -v $(pwd):/data ${DOCKER_CI_TOOLS} chown -R $(id -u):$(id -g) /data'
+		unstable {
+			archiveArtifacts(artifacts: 'debug/**.*', allowEmptyArchive: true)
 		}
 	}
 }
