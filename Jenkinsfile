@@ -20,8 +20,6 @@ pipeline {
 			steps {
 				ansiColor('xterm') {
 					sh './scripts/frontend-build'
-					// todo later:
-					// sh 'docker run --rm -v $(pwd)/app:/data ${DOCKER_CI_TOOLS} node-prune'
 				}
 			}
 		}
@@ -70,10 +68,10 @@ pipeline {
 				}
 			}
 		}
-		stage('Develop') {
+		stage('Test') {
 			when {
 				allOf {
-					branch 'develop'
+					branch 'docker-multi'
 					not {
 						equals expected: 'UNSTABLE', actual: currentBuild.result
 					}
@@ -84,7 +82,7 @@ pipeline {
 					withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
 						sh "docker login -u '${duser}' -p '${dpass}'"
 						// Buildx to with push
-						sh './scripts/buildx --push -t docker.io/jc21/${IMAGE}:develop'
+						sh './scripts/buildx --push -t docker.io/jc21/${IMAGE}:docker-multi'
 					}
 				}
 			}

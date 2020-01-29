@@ -36,7 +36,7 @@ function apiValidator (schema, payload/*, description*/) {
 }
 
 apiValidator.loadSchemas = parser
-    .dereference(path.resolve('src/backend/schema/index.json'))
+    .dereference(path.resolve('backend/schema/index.json'))
     .then(schema => {
         ajv.addSchema(schema);
         return schema;

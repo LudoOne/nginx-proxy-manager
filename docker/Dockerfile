@@ -16,6 +16,7 @@ ENV NODE_ENV=production
 RUN echo "fs.file-max = 65535" > /etc/sysctl.conf \
 	&& rm -rf /etc/nginx \
 	&& apk update \
+	&& apk add python2 \
 	&& rm -rf /var/cache/apk/*
 
 ENV NPM_BUILD_VERSION="${BUILD_VERSION}" NPM_BUILD_COMMIT="${BUILD_COMMIT}" NPM_BUILD_DATE="${BUILD_DATE}"
@@ -32,6 +33,9 @@ EXPOSE 9876
 COPY docker/rootfs      /
 ADD frontend/dist       /app/frontend
 ADD backend             /app/backend
+
+WORKDIR /app/backend
+RUN yarn install
 
 VOLUME [ "/data", "/etc/letsencrypt" ]
 CMD [ "/init" ]
