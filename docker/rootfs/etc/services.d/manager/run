@@ -6,6 +6,6 @@ cd /app || echo
 
 while :
 do
-	node --abort_on_uncaught_exception --max_old_space_size=250 backend/index.js
+	node --abort_on_uncaught_exception --max_old_space_size=250 index.js
 	sleep 1
 done

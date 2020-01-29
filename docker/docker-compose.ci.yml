@@ -9,6 +9,7 @@ services:
       - FORCE_COLOR=1
     volumes:
       - npm_data:/data
+      - ../.jenkins/config.json:/app/config/production.json
     expose:
       - 81
       - 80

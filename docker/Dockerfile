@@ -31,10 +31,10 @@ EXPOSE 443
 EXPOSE 9876
 
 COPY docker/rootfs      /
+ADD backend             /app
 ADD frontend/dist       /app/frontend
-ADD backend             /app/backend
 
-WORKDIR /app/backend
+WORKDIR /app
 RUN yarn install
 
 VOLUME [ "/data", "/etc/letsencrypt" ]

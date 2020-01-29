@@ -3,8 +3,8 @@ module.exports = {
         client:     'mysql',
         migrations: {
             tableName: 'migrations',
-            stub:      'backlend/lib/migrate_template.js',
-            directory: 'backend/migrations'
+            stub:      'lib/migrate_template.js',
+            directory: 'migrations'
         }
     },
 
@@ -12,8 +12,8 @@ module.exports = {
         client:     'mysql',
         migrations: {
             tableName: 'migrations',
-            stub:      'backend/lib/migrate_template.js',
-            directory: 'backend/migrations'
+            stub:      'lib/migrate_template.js',
+            directory: 'migrations'
         }
     }
 };
