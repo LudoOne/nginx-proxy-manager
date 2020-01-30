@@ -28,4 +28,4 @@ EXPOSE 81
 EXPOSE 443
 
 CMD [ "/init" ]
-HEALTHCHECK --interval=15s --timeout=3s CMD curl -f http://127.0.0.1:81/api || exit 1
+HEALTHCHECK --interval=15s --timeout=3s CMD curl -f http://127.0.0.1:81/api/ || exit 1

@@ -43,4 +43,4 @@ RUN rm -rf /etc/services.d/frontend RUN rm -f /etc/nginx/conf.d/dev.conf
 VOLUME [ "/data", "/etc/letsencrypt" ]
 CMD [ "/init" ]
 
-HEALTHCHECK --interval=15s --timeout=3s CMD curl -f http://localhost:9876/health || exit 1
+HEALTHCHECK --interval=15s --timeout=3s CMD curl -f http://127.0.0.1:81/api/ || exit 1
