@@ -23,7 +23,7 @@ router
             proto = req.headers['x-forwarded-proto'];
         }
 
-        let origin = proto + '://' + req.host;
+        let origin = proto + '://' + req.hostname;
         if (typeof req.headers.origin !== 'undefined' && req.headers.origin) {
             origin = req.headers.origin;
         }

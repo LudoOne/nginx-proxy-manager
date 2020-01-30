@@ -80,7 +80,7 @@ pipeline {
 					// Dumps to analyze later
 					sh 'mkdir -p debug'
 					sh 'docker-compose logs fullstack | gzip > debug/docker_fullstack.log.gz'
-					sh 'docker-compose down -v --remove-orphans'
+					//sh 'docker-compose down -v --remove-orphans'
 				}
 			}
 		}
