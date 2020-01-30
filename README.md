@@ -5,6 +5,7 @@
 ![Version](https://img.shields.io/badge/version-2.0.14-green.svg?style=for-the-badge)
 ![Stars](https://img.shields.io/docker/stars/jc21/nginx-proxy-manager.svg?style=for-the-badge)
 ![Pulls](https://img.shields.io/docker/pulls/jc21/nginx-proxy-manager.svg?style=for-the-badge)
+
 [![Build Status](https://ci.nginxproxymanager.jc21.com/buildStatus/icon?job=nginx-proxy-manager%2Fmaster&style=flat-square)](https://ci.nginxproxymanager.jc21.com/job/nginx-proxy-manager/job/master/)
 
 This project comes as a pre-built docker image that enables you to easily forward to your websites
