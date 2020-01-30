@@ -65,7 +65,7 @@ module.exports = function () {
             return new Promise((resolve, reject) => {
                 try {
                     if (!token || token === null || token === 'null') {
-                        reject('Empty token');
+                        reject(new error.AuthError('Empty token'));
                     } else {
                         jwt.verify(token, public_key, {ignoreExpiration: false, algorithms: [ALGO]}, (err, result) => {
                             if (err) {

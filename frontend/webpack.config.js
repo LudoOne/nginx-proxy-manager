@@ -3,6 +3,8 @@ const webpack              = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Visualizer           = require('webpack-visualizer-plugin');
 const CopyWebpackPlugin    = require('copy-webpack-plugin');
+const HtmlWebpackPlugin    = require('html-webpack-plugin');
+const PACKAGE              = require('./package.json');
 
 module.exports = {
 	entry:     {
@@ -97,6 +99,22 @@ module.exports = {
 			jQuery: 'jquery',
 			_:      'underscore'
 		}),
+		new HtmlWebpackPlugin({
+			template:           '!!ejs-webpack-loader!html/index.ejs',
+			filename:           'index.html',
+			inject:             false,
+			templateParameters: {
+				version: PACKAGE.version
+			}
+		}),
+		new HtmlWebpackPlugin({
+			template:           '!!ejs-webpack-loader!html/login.ejs',
+			filename:           'login.html',
+			inject:             false,
+			templateParameters: {
+				version: PACKAGE.version
+			}
+		}),
 		new MiniCssExtractPlugin({
 			filename:      'css/[name].css',
 			chunkFilename: 'css/[id].css'
@@ -110,5 +128,13 @@ module.exports = {
 			toType:  'dir',
 			context: '/app/frontend'
 		}])
-	]
+	],
+	devServer: {
+		contentBase: path.resolve(__dirname, 'dist'),
+		compress:    true,
+		port:        9000,
+		index:      'index.html',
+		open:       false,
+		public:     '127.0.0.1:3081'
+	}
 };

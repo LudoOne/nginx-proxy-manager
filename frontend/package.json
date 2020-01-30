@@ -15,7 +15,9 @@
     "css-loader": "^3.2.0",
     "ejs-lint": "^0.3.0",
     "ejs-loader": "^0.3.5",
+    "ejs-webpack-loader": "^2.2.2",
     "file-loader": "^5.0.2",
+    "html-webpack-plugin": "^3.2.0",
     "imports-loader": "^0.8.0",
     "jquery": "^3.4.1",
     "jquery-mask-plugin": "^1.14.16",
@@ -35,10 +37,13 @@
     "underscore": "^1.9.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "scripts": {
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "watch": "webpack --watch --mode development",
+    "start": "webpack-dev-server --mode development"
   },
   "author": "Jamie Curnow <jc@jc21.com>",
   "license": "MIT"

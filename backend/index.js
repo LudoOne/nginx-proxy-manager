@@ -23,8 +23,8 @@ function appStart () {
             internalCertificate.initTimer();
             internalIpRanges.initTimer();
 
-            const server = app.listen(81, () => {
-                logger.info('PID ' + process.pid + ' listening on port 81 ...');
+            const server = app.listen(3000, () => {
+                logger.info('Backend PID ' + process.pid + ' listening on port 3000 ...');
 
                 process.on('SIGTERM', () => {
                     logger.info('PID ' + process.pid + ' received SIGTERM');

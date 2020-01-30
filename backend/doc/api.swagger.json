@@ -1,0 +1,2540 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Nginx Proxy Manager API",
+		"version": "2.x.x"
+	},
+	"paths": {
+		"/": {
+			"get": {
+				"operationId": "health",
+				"summary": "Returns the API health status",
+				"responses": {
+					"200": {
+						"description": "200 response",
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"status": "OK",
+											"version": {
+												"major": 2,
+												"minor": 1,
+												"revision": 0
+											}
+										}
+									}
+								},
+								"schema": {
+									"type": "object",
+									"description": "Health object",
+									"additionalProperties": false,
+									"required": [
+										"status",
+										"version"
+									],
+									"properties": {
+										"status": {
+											"type": "string",
+											"description": "Healthy",
+											"example": "OK"
+										},
+										"version": {
+											"type": "object",
+											"description": "The version object",
+											"example": {
+												"major": 2,
+												"minor": 0,
+												"revision": 0
+											},
+											"additionalProperties": false,
+											"required": [
+												"major",
+												"minor",
+												"revision"
+											],
+											"properties": {
+												"major": {
+													"type": "integer",
+													"minimum": 0
+												},
+												"minor": {
+													"type": "integer",
+													"minimum": 0
+												},
+												"revision": {
+													"type": "integer",
+													"minimum": 0
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/config": {
+			"get": {
+				"operationId": "config",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"result": {
+												"data_folder": "/data",
+												"db": {
+													"migration_disabled": false
+												},
+												"http": {
+													"port": 3000
+												},
+												"key": {
+													"private": "(hidden)",
+													"public": "-----BEGIN PUBLIC KEY-----\nMIICCgKCAgEAtjv7E0/FNdPG0BB3PKlO/OJO8A9kShqTOleUHS+6AgbUcsXI+YmG\np9JCsWeupin/l3KYgXfjkroglfIJa7s5wRY0RZD11uFEzSN356/6cOqCI98vjrFP\n5iUoFZQ79dvACy00KYewF1lIkOGdzKf4+Nk6+hMHBCzxy6w8SKjqBPjdoM6SraSl\n01l2lzjj1HEfoSn2JHvHvwuiLzwtSQ9HLF8UeB3y3EJ8IgnCLU83/553bmJ8qWtN\n3OtecfeZcTFFUNuok3kSPZ83Vf/pxPtN0fHQmzNQojEa6P2xuFWGJpos5Z5z2SuH\nRT2hfZS3neinC7TXBxm/Iin1ndmDTdVnQ8+SkrHwbufdgxKAL78iN5lU7GTpGVpb\nulxUA8+9WtLT1peJ4tbWig2bV4wcLV8jL6kJENyDSxXIhqv5mK0uE4ru0nIwQ4MB\nUo6WkxMTZpMnfAVi7GDQGpI+ZTmadSRo2sk8ktEZePRY8+KHinDQsClx9bb5llMq\n9uYP0JdtjrdjPJ2mpD9leoZKXHD8NfJri8o2guxW0g4jWCvCx2bx3MarzJk8vOVu\nE6wngtikgpoerV5AqwJpSroyYpjARZt2MJGv4U1FsopOfK/XRmrsjAG3pEd6+Lvk\ngF56QxGTbO7xcAbWG/Kpug5nNSm4Wfg4EshhxAl4XfPcuvGAsXdh+qcCAwEAAQ==\n-----END PUBLIC KEY-----\n"
+												},
+												"log": {
+													"format": "nice",
+													"level": "debug",
+													"sentry": "(hidden)"
+												},
+												"swagger_file": "doc/api.v3.0.swagger.json"
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "Config object",
+									"properties": {
+										"result": {
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Returns the configuration"
+			}
+		},
+		"/schema": {
+			"get": {
+				"operationId": "schema",
+				"responses": {
+					"200": {
+						"description": "200 response"
+					}
+				},
+				"summary": "Returns this swagger API schema"
+			}
+		},
+		"/settings": {
+			"get": {
+				"operationId": "getSettings",
+				"parameters": [
+					{
+						"description": "The pagination row offset, default 0",
+						"example": 0,
+						"in": "query",
+						"name": "offset",
+						"schema": {
+							"type": "number"
+						}
+					},
+					{
+						"description": "The pagination row limit, default 10",
+						"example": 10,
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "number"
+						}
+					},
+					{
+						"description": "The sorting of the list",
+						"example": "id,name.asc,value.desc",
+						"in": "query",
+						"name": "sort",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": {
+												"items": [
+													{
+														"created_on": 1578010090,
+														"id": 1,
+														"modified_on": 1578010095,
+														"name": "default-site",
+														"value": {
+															"html": "<p>not found</p>",
+															"type": "custom"
+														}
+													}
+												],
+												"limit": 10,
+												"offset": 0,
+												"sort": [
+													{
+														"direction": "ASC",
+														"field": "name"
+													}
+												],
+												"total": 1
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "SettingList object",
+									"properties": {
+										"result": {
+											"additionalProperties": false,
+											"properties": {
+												"items": {
+													"items": {
+														"additionalProperties": false,
+														"properties": {
+															"id": {
+																"minimum": 1,
+																"type": "integer"
+															},
+															"name": {
+																"maxLength": 100,
+																"minLength": 2,
+																"type": "string"
+															},
+															"value": {
+																"anyOf": [
+																	{
+																		"type": "array"
+																	},
+																	{
+																		"type": "boolean"
+																	},
+																	{
+																		"type": "object"
+																	},
+																	{
+																		"type": "integer"
+																	}
+																]
+															}
+														},
+														"required": [
+															"id",
+															"name",
+															"value"
+														],
+														"type": "object"
+													},
+													"type": "array"
+												},
+												"limit": {
+													"description": "Pagination Limit",
+													"type": "integer"
+												},
+												"offset": {
+													"description": "Pagination Offset",
+													"type": "integer"
+												},
+												"sort": {
+													"description": "Sorting",
+													"items": {
+														"additionalProperties": false,
+														"description": "Sort object",
+														"properties": {
+															"direction": {
+																"description": "Sort order",
+																"pattern": "^(ASC|DESC)$",
+																"type": "string"
+															},
+															"field": {
+																"description": "Field for sorting on",
+																"type": "string"
+															}
+														},
+														"required": [
+															"field",
+															"direction"
+														],
+														"type": "object"
+													},
+													"type": "array"
+												},
+												"total": {
+													"description": "Total number of rows",
+													"type": "integer"
+												}
+											},
+											"required": [
+												"total",
+												"offset",
+												"limit",
+												"sort"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Get a list of settings",
+				"tags": [
+					"Settings"
+				]
+			},
+			"post": {
+				"operationId": "createSetting",
+				"parameters": [
+					{
+						"description": "Setting to Create",
+						"in": "body",
+						"name": "setting",
+						"required": true,
+						"schema": {
+							"additionalProperties": false,
+							"properties": {
+								"name": {
+									"maxLength": 100,
+									"minLength": 2,
+									"type": "string"
+								},
+								"value": {
+									"anyOf": [
+										{
+											"type": "array"
+										},
+										{
+											"type": "boolean"
+										},
+										{
+											"type": "object"
+										},
+										{
+											"type": "integer"
+										}
+									]
+								}
+							},
+							"required": [
+								"name",
+								"value"
+							],
+							"type": "object"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": {
+												"created_on": 1578010090,
+												"id": 2,
+												"modified_on": 1578010090,
+												"name": "default-site",
+												"value": {
+													"html": "<p>not found</p>",
+													"type": "custom"
+												}
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "Setting object",
+									"properties": {
+										"result": {
+											"additionalProperties": false,
+											"properties": {
+												"id": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"name": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"value": {
+													"anyOf": [
+														{
+															"type": "array"
+														},
+														{
+															"type": "boolean"
+														},
+														{
+															"type": "object"
+														},
+														{
+															"type": "integer"
+														}
+													]
+												}
+											},
+											"required": [
+												"id",
+												"name",
+												"value"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "201 response"
+					}
+				},
+				"summary": "Create a new Setting",
+				"tags": [
+					"Settings"
+				]
+			}
+		},
+		"/settings/{name}": {
+			"get": {
+				"operationId": "getSetting",
+				"parameters": [
+					{
+						"description": "Name of the setting",
+						"example": "default-site",
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"minLength": 2,
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": {
+												"created_on": 1578010090,
+												"id": 2,
+												"modified_on": 1578010095,
+												"name": "default-site",
+												"value": {
+													"html": "<p>not found</p>",
+													"type": "custom"
+												}
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "Setting object",
+									"properties": {
+										"result": {
+											"additionalProperties": false,
+											"properties": {
+												"id": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"name": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"value": {
+													"anyOf": [
+														{
+															"type": "array"
+														},
+														{
+															"type": "boolean"
+														},
+														{
+															"type": "object"
+														},
+														{
+															"type": "integer"
+														}
+													]
+												}
+											},
+											"required": [
+												"id",
+												"name",
+												"value"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Get a setting object by name",
+				"tags": [
+					"Settings"
+				]
+			}
+		},
+		"/tokens": {
+			"get": {
+				"operationId": "refreshToken",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": {
+												"expires": 1566540510,
+												"scope": "user",
+												"token": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4"
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "Token object",
+									"properties": {
+										"result": {
+											"additionalProperties": false,
+											"properties": {
+												"expires": {
+													"description": "Token Expiry Unix Time",
+													"example": 1566540249,
+													"minimum": 1,
+													"type": "number"
+												},
+												"token": {
+													"description": "JWT Token",
+													"example": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4",
+													"type": "string"
+												}
+											},
+											"required": [
+												"expires",
+												"token"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Refresh your access token",
+				"tags": [
+					"Tokens"
+				]
+			},
+			"post": {
+				"operationId": "requestToken",
+				"parameters": [
+					{
+						"description": "Credentials Payload",
+						"in": "body",
+						"name": "credentials",
+						"required": true,
+						"schema": {
+							"additionalProperties": false,
+							"properties": {
+								"identity": {
+									"minLength": 1,
+									"type": "string"
+								},
+								"scope": {
+									"minLength": 1,
+									"type": "string"
+								},
+								"secret": {
+									"minLength": 1,
+									"type": "string"
+								}
+							},
+							"required": [
+								"identity",
+								"secret"
+							],
+							"type": "object"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": {
+												"expires": 1566540510,
+												"scope": "user",
+												"token": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4"
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "Token object",
+									"properties": {
+										"result": {
+											"additionalProperties": false,
+											"properties": {
+												"expires": {
+													"description": "Token Expiry Unix Time",
+													"example": 1566540249,
+													"minimum": 1,
+													"type": "number"
+												},
+												"token": {
+													"description": "JWT Token",
+													"example": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4",
+													"type": "string"
+												}
+											},
+											"required": [
+												"expires",
+												"token"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Request a new access token from credentials",
+				"tags": [
+					"Tokens"
+				]
+			}
+		},
+		"/users": {
+			"get": {
+				"operationId": "getUsers",
+				"parameters": [
+					{
+						"description": "The pagination row offset, default 0",
+						"example": 0,
+						"in": "query",
+						"name": "offset",
+						"schema": {
+							"type": "number"
+						}
+					},
+					{
+						"description": "The pagination row limit, default 10",
+						"example": 10,
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "number"
+						}
+					},
+					{
+						"description": "The sorting of the list",
+						"example": "name,nickname.desc,email.asc",
+						"in": "query",
+						"name": "sort",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": {
+												"items": [
+													{
+														"created_on": 1578010090,
+														"email": "jc@jc21.com",
+														"id": 1,
+														"is_disabled": false,
+														"modified_on": 1578010095,
+														"name": "Jamie Curnow",
+														"nickname": "James",
+														"roles": [
+															"admin"
+														]
+													},
+													{
+														"created_on": 1578010100,
+														"email": "johdoe@example.com",
+														"id": 2,
+														"is_disabled": false,
+														"modified_on": 1578010105,
+														"name": "John Doe",
+														"nickname": "John",
+														"roles": [
+															"admin"
+														]
+													},
+													{
+														"created_on": 1578010110,
+														"email": "janedoe@example.com",
+														"id": 3,
+														"is_disabled": false,
+														"modified_on": 1578010115,
+														"name": "Jane Doe",
+														"nickname": "Jane",
+														"roles": [
+															"admin"
+														]
+													}
+												],
+												"limit": 100,
+												"offset": 0,
+												"sort": [
+													{
+														"direction": "ASC",
+														"field": "name"
+													},
+													{
+														"direction": "DESC",
+														"field": "nickname"
+													},
+													{
+														"direction": "ASC",
+														"field": "email"
+													}
+												],
+												"total": 3
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "UserList object",
+									"properties": {
+										"result": {
+											"additionalProperties": false,
+											"properties": {
+												"items": {
+													"items": {
+														"additionalProperties": false,
+														"properties": {
+															"auth": {
+																"properties": {
+																	"id": {
+																		"type": "integer"
+																	},
+																	"type": {
+																		"pattern": "^password$",
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"type"
+																],
+																"type": "object"
+															},
+															"created_on": {
+																"minimum": 1,
+																"type": "integer"
+															},
+															"email": {
+																"maxLength": 150,
+																"minLength": 5,
+																"type": "string"
+															},
+															"id": {
+																"minimum": 1,
+																"type": "integer"
+															},
+															"is_deleted": {
+																"type": "boolean"
+															},
+															"is_disabled": {
+																"type": "boolean"
+															},
+															"modified_on": {
+																"minimum": 1,
+																"type": "integer"
+															},
+															"name": {
+																"maxLength": 100,
+																"minLength": 2,
+																"type": "string"
+															},
+															"nickname": {
+																"maxLength": 100,
+																"minLength": 2,
+																"type": "string"
+															},
+															"roles": {
+																"items": {
+																	"minLength": 2,
+																	"type": "string"
+																},
+																"type": "array"
+															}
+														},
+														"required": [
+															"id",
+															"name",
+															"nickname",
+															"email",
+															"created_on",
+															"modified_on",
+															"roles",
+															"is_disabled"
+														],
+														"type": "object"
+													},
+													"type": "array"
+												},
+												"limit": {
+													"description": "Pagination Limit",
+													"type": "integer"
+												},
+												"offset": {
+													"description": "Pagination Offset",
+													"type": "integer"
+												},
+												"sort": {
+													"description": "Sorting",
+													"items": {
+														"additionalProperties": false,
+														"description": "Sort object",
+														"properties": {
+															"direction": {
+																"description": "Sort order",
+																"pattern": "^(ASC|DESC)$",
+																"type": "string"
+															},
+															"field": {
+																"description": "Field for sorting on",
+																"type": "string"
+															}
+														},
+														"required": [
+															"field",
+															"direction"
+														],
+														"type": "object"
+													},
+													"type": "array"
+												},
+												"total": {
+													"description": "Total number of rows",
+													"type": "integer"
+												}
+											},
+											"required": [
+												"total",
+												"offset",
+												"limit",
+												"sort"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Get a list of users",
+				"tags": [
+					"Users"
+				]
+			},
+			"post": {
+				"operationId": "createUser",
+				"parameters": [
+					{
+						"description": "User to Create",
+						"in": "body",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"additionalProperties": false,
+							"properties": {
+								"auth": {
+									"properties": {
+										"id": {
+											"type": "integer"
+										},
+										"type": {
+											"pattern": "^password$",
+											"type": "string"
+										}
+									},
+									"required": [
+										"type"
+									],
+									"type": "object"
+								},
+								"email": {
+									"maxLength": 150,
+									"minLength": 5,
+									"type": "string"
+								},
+								"is_disabled": {
+									"type": "boolean"
+								},
+								"name": {
+									"maxLength": 100,
+									"minLength": 2,
+									"type": "string"
+								},
+								"nickname": {
+									"maxLength": 100,
+									"minLength": 2,
+									"type": "string"
+								},
+								"roles": {
+									"items": {
+										"minLength": 2,
+										"type": "string"
+									},
+									"type": "array"
+								}
+							},
+							"required": [
+								"name",
+								"nickname",
+								"email",
+								"roles",
+								"is_disabled"
+							],
+							"type": "object"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"result": {
+												"auth": {
+													"id": 1,
+													"type": "password"
+												},
+												"created_on": 1578010100,
+												"email": "jc@jc21.com",
+												"id": 1,
+												"is_disabled": false,
+												"modified_on": 1578010100,
+												"name": "Jamie Curnow",
+												"nickname": "James",
+												"roles": [
+													"admin"
+												]
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "User object",
+									"properties": {
+										"error": {
+											"additionalProperties": false,
+											"description": "Error object",
+											"properties": {
+												"code": {
+													"description": "Error code",
+													"minimum": 0,
+													"type": "integer"
+												},
+												"message": {
+													"description": "Error message",
+													"type": "string"
+												}
+											},
+											"required": [
+												"code",
+												"message"
+											],
+											"type": "object"
+										},
+										"result": {
+											"additionalProperties": false,
+											"nullable": true,
+											"properties": {
+												"auth": {
+													"properties": {
+														"id": {
+															"type": "integer"
+														},
+														"type": {
+															"pattern": "^password$",
+															"type": "string"
+														}
+													},
+													"required": [
+														"type"
+													],
+													"type": "object"
+												},
+												"created_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"email": {
+													"maxLength": 150,
+													"minLength": 5,
+													"type": "string"
+												},
+												"id": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"is_deleted": {
+													"type": "boolean"
+												},
+												"is_disabled": {
+													"type": "boolean"
+												},
+												"modified_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"name": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"nickname": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"roles": {
+													"items": {
+														"minLength": 2,
+														"type": "string"
+													},
+													"type": "array"
+												}
+											},
+											"required": [
+												"id",
+												"name",
+												"nickname",
+												"email",
+												"created_on",
+												"modified_on",
+												"roles",
+												"is_disabled"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "201 response"
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"result": {
+												"code": 400,
+												"message": "An user already exists with this email address"
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "User object",
+									"properties": {
+										"error": {
+											"additionalProperties": false,
+											"description": "Error object",
+											"properties": {
+												"code": {
+													"description": "Error code",
+													"minimum": 0,
+													"type": "integer"
+												},
+												"message": {
+													"description": "Error message",
+													"type": "string"
+												}
+											},
+											"required": [
+												"code",
+												"message"
+											],
+											"type": "object"
+										},
+										"result": {
+											"additionalProperties": false,
+											"nullable": true,
+											"properties": {
+												"auth": {
+													"properties": {
+														"id": {
+															"type": "integer"
+														},
+														"type": {
+															"pattern": "^password$",
+															"type": "string"
+														}
+													},
+													"required": [
+														"type"
+													],
+													"type": "object"
+												},
+												"created_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"email": {
+													"maxLength": 150,
+													"minLength": 5,
+													"type": "string"
+												},
+												"id": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"is_deleted": {
+													"type": "boolean"
+												},
+												"is_disabled": {
+													"type": "boolean"
+												},
+												"modified_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"name": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"nickname": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"roles": {
+													"items": {
+														"minLength": 2,
+														"type": "string"
+													},
+													"type": "array"
+												}
+											},
+											"required": [
+												"id",
+												"name",
+												"nickname",
+												"email",
+												"created_on",
+												"modified_on",
+												"roles",
+												"is_disabled"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "400 response"
+					}
+				},
+				"summary": "Create a new User",
+				"tags": [
+					"Users"
+				]
+			}
+		},
+		"/users/{userID}": {
+			"delete": {
+				"operationId": "deleteUser",
+				"parameters": [
+					{
+						"description": "Numeric ID of the user",
+						"example": 1,
+						"in": "path",
+						"name": "userID",
+						"required": true,
+						"schema": {
+							"minimum": 0,
+							"type": "integer"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"result": true
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "Deleted Item object",
+									"properties": {
+										"error": {
+											"additionalProperties": false,
+											"description": "Error object",
+											"properties": {
+												"code": {
+													"description": "Error code",
+													"minimum": 0,
+													"type": "integer"
+												},
+												"message": {
+													"description": "Error message",
+													"type": "string"
+												}
+											},
+											"required": [
+												"code",
+												"message"
+											],
+											"type": "object"
+										},
+										"result": {
+											"nullable": true,
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"error": {
+											"code": 400,
+											"message": "You cannot delete yourself!"
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "Deleted Item object",
+									"properties": {
+										"error": {
+											"additionalProperties": false,
+											"description": "Error object",
+											"properties": {
+												"code": {
+													"description": "Error code",
+													"minimum": 0,
+													"type": "integer"
+												},
+												"message": {
+													"description": "Error message",
+													"type": "string"
+												}
+											},
+											"required": [
+												"code",
+												"message"
+											],
+											"type": "object"
+										},
+										"result": {
+											"nullable": true,
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "400 response"
+					}
+				},
+				"summary": "Delete a User",
+				"tags": [
+					"Users"
+				]
+			},
+			"get": {
+				"operationId": "getUser",
+				"parameters": [
+					{
+						"description": "Numeric ID of the user or 'me' to get yourself",
+						"example": 1,
+						"in": "path",
+						"name": "userID",
+						"required": true,
+						"schema": {
+							"anyOf": [
+								{
+									"minimum": 0,
+									"type": "integer"
+								},
+								{
+									"pattern": "^me$",
+									"type": "string"
+								}
+							]
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": {
+												"created_on": 1578010100,
+												"email": "jc@jc21.com",
+												"id": 1,
+												"is_disabled": false,
+												"modified_on": 1578010105,
+												"name": "Jamie Curnow",
+												"nickname": "James",
+												"roles": [
+													"admin"
+												]
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "User object",
+									"properties": {
+										"error": {
+											"additionalProperties": false,
+											"description": "Error object",
+											"properties": {
+												"code": {
+													"description": "Error code",
+													"minimum": 0,
+													"type": "integer"
+												},
+												"message": {
+													"description": "Error message",
+													"type": "string"
+												}
+											},
+											"required": [
+												"code",
+												"message"
+											],
+											"type": "object"
+										},
+										"result": {
+											"additionalProperties": false,
+											"nullable": true,
+											"properties": {
+												"auth": {
+													"properties": {
+														"id": {
+															"type": "integer"
+														},
+														"type": {
+															"pattern": "^password$",
+															"type": "string"
+														}
+													},
+													"required": [
+														"type"
+													],
+													"type": "object"
+												},
+												"created_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"email": {
+													"maxLength": 150,
+													"minLength": 5,
+													"type": "string"
+												},
+												"id": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"is_deleted": {
+													"type": "boolean"
+												},
+												"is_disabled": {
+													"type": "boolean"
+												},
+												"modified_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"name": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"nickname": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"roles": {
+													"items": {
+														"minLength": 2,
+														"type": "string"
+													},
+													"type": "array"
+												}
+											},
+											"required": [
+												"id",
+												"name",
+												"nickname",
+												"email",
+												"created_on",
+												"modified_on",
+												"roles",
+												"is_disabled"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Get a user object by ID or 'me'",
+				"tags": [
+					"Users"
+				]
+			},
+			"put": {
+				"operationId": "updateUser",
+				"parameters": [
+					{
+						"description": "Numeric ID of the user or 'me' to update yourself",
+						"example": 1,
+						"in": "path",
+						"name": "userID",
+						"required": true,
+						"schema": {
+							"anyOf": [
+								{
+									"minimum": 0,
+									"type": "integer"
+								},
+								{
+									"pattern": "^me$",
+									"type": "string"
+								}
+							]
+						}
+					},
+					{
+						"description": "User details to update",
+						"in": "body",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"additionalProperties": false,
+							"properties": {
+								"email": {
+									"format": "email",
+									"maxLength": 100,
+									"minLength": 8,
+									"type": "string"
+								},
+								"is_disabled": {
+									"type": "boolean"
+								},
+								"name": {
+									"maxLength": 100,
+									"minLength": 2,
+									"type": "string"
+								},
+								"nickname": {
+									"maxLength": 100,
+									"minLength": 0,
+									"type": "string"
+								},
+								"roles": {
+									"items": {
+										"minLength": 1,
+										"type": "string"
+									},
+									"type": "array"
+								}
+							},
+							"type": "object"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"result": {
+												"auth": {
+													"id": 1,
+													"type": "password"
+												},
+												"created_on": 1578010100,
+												"email": "jc@jc21.com",
+												"id": 1,
+												"is_disabled": false,
+												"modified_on": 1578010110,
+												"name": "Jamie Curnow",
+												"nickname": "James",
+												"roles": [
+													"admin"
+												]
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "User object",
+									"properties": {
+										"error": {
+											"additionalProperties": false,
+											"description": "Error object",
+											"properties": {
+												"code": {
+													"description": "Error code",
+													"minimum": 0,
+													"type": "integer"
+												},
+												"message": {
+													"description": "Error message",
+													"type": "string"
+												}
+											},
+											"required": [
+												"code",
+												"message"
+											],
+											"type": "object"
+										},
+										"result": {
+											"additionalProperties": false,
+											"nullable": true,
+											"properties": {
+												"auth": {
+													"properties": {
+														"id": {
+															"type": "integer"
+														},
+														"type": {
+															"pattern": "^password$",
+															"type": "string"
+														}
+													},
+													"required": [
+														"type"
+													],
+													"type": "object"
+												},
+												"created_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"email": {
+													"maxLength": 150,
+													"minLength": 5,
+													"type": "string"
+												},
+												"id": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"is_deleted": {
+													"type": "boolean"
+												},
+												"is_disabled": {
+													"type": "boolean"
+												},
+												"modified_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"name": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"nickname": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"roles": {
+													"items": {
+														"minLength": 2,
+														"type": "string"
+													},
+													"type": "array"
+												}
+											},
+											"required": [
+												"id",
+												"name",
+												"nickname",
+												"email",
+												"created_on",
+												"modified_on",
+												"roles",
+												"is_disabled"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "200 response"
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"duplicateemail": {
+										"value": {
+											"error": {
+												"code": 400,
+												"message": "A user already exists with this email address"
+											}
+										}
+									},
+									"nodisable": {
+										"value": {
+											"error": {
+												"code": 400,
+												"message": "You cannot disable yourself!"
+											}
+										}
+									}
+								},
+								"schema": {
+									"additionalProperties": false,
+									"description": "User object",
+									"properties": {
+										"error": {
+											"additionalProperties": false,
+											"description": "Error object",
+											"properties": {
+												"code": {
+													"description": "Error code",
+													"minimum": 0,
+													"type": "integer"
+												},
+												"message": {
+													"description": "Error message",
+													"type": "string"
+												}
+											},
+											"required": [
+												"code",
+												"message"
+											],
+											"type": "object"
+										},
+										"result": {
+											"additionalProperties": false,
+											"nullable": true,
+											"properties": {
+												"auth": {
+													"properties": {
+														"id": {
+															"type": "integer"
+														},
+														"type": {
+															"pattern": "^password$",
+															"type": "string"
+														}
+													},
+													"required": [
+														"type"
+													],
+													"type": "object"
+												},
+												"created_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"email": {
+													"maxLength": 150,
+													"minLength": 5,
+													"type": "string"
+												},
+												"id": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"is_deleted": {
+													"type": "boolean"
+												},
+												"is_disabled": {
+													"type": "boolean"
+												},
+												"modified_on": {
+													"minimum": 1,
+													"type": "integer"
+												},
+												"name": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"nickname": {
+													"maxLength": 100,
+													"minLength": 2,
+													"type": "string"
+												},
+												"roles": {
+													"items": {
+														"minLength": 2,
+														"type": "string"
+													},
+													"type": "array"
+												}
+											},
+											"required": [
+												"id",
+												"name",
+												"nickname",
+												"email",
+												"created_on",
+												"modified_on",
+												"roles",
+												"is_disabled"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"result"
+									],
+									"type": "object"
+								}
+							}
+						},
+						"description": "400 response"
+					}
+				},
+				"summary": "Update an existing User",
+				"tags": [
+					"Users"
+				]
+			}
+		},
+		"/users/{userID}/auth": {
+			"post": {
+				"operationId": "setPassword",
+				"parameters": [
+					{
+						"description": "Numeric ID of the user or 'me' to get yourself",
+						"example": 1,
+						"in": "path",
+						"name": "userID",
+						"required": true,
+						"schema": {
+							"anyOf": [
+								{
+									"minimum": 0,
+									"type": "integer"
+								},
+								{
+									"pattern": "^me$",
+									"type": "string"
+								}
+							]
+						}
+					},
+					{
+						"description": "Credentials to set",
+						"in": "body",
+						"name": "credentials",
+						"required": true,
+						"schema": {
+							"additionalProperties": false,
+							"properties": {
+								"secret": {
+									"minLength": 1,
+									"type": "string"
+								},
+								"type": {
+									"minLength": 1,
+									"type": "string"
+								}
+							},
+							"required": [
+								"type",
+								"secret"
+							],
+							"type": "object"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": [
+												"TODO"
+											]
+										}
+									}
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Sets a user's password",
+				"tags": [
+					"Users"
+				]
+			}
+		},
+		"/users/{userID}/permissions": {
+			"put": {
+				"operationId": "setPermissions",
+				"parameters": [
+					{
+						"description": "Numeric ID of the user",
+						"example": 1,
+						"in": "path",
+						"name": "userID",
+						"required": true,
+						"schema": {
+							"minimum": 0,
+							"type": "integer"
+						}
+					},
+					{
+						"description": "Permissions to apply",
+						"in": "body",
+						"name": "permissions",
+						"required": true,
+						"schema": {
+							"properties": {
+								"access_lists": {
+									"pattern": "^(hidden|view|manage)$",
+									"type": "string"
+								},
+								"certificates": {
+									"pattern": "^(hidden|view|manage)$",
+									"type": "string"
+								},
+								"dead_hosts": {
+									"pattern": "^(hidden|view|manage)$",
+									"type": "string"
+								},
+								"proxy_hosts": {
+									"pattern": "^(hidden|view|manage)$",
+									"type": "string"
+								},
+								"redirection_hosts": {
+									"pattern": "^(hidden|view|manage)$",
+									"type": "string"
+								},
+								"streams": {
+									"pattern": "^(hidden|view|manage)$",
+									"type": "string"
+								},
+								"visibility": {
+									"pattern": "^(all|user)$",
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"examples": {
+									"success": {
+										"value": {
+											"result": true
+										}
+									}
+								}
+							}
+						},
+						"description": "200 response"
+					}
+				},
+				"summary": "Sets a user's permissions",
+				"tags": [
+					"Users"
+				]
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Config": {
+				"additionalProperties": false,
+				"description": "Config object",
+				"properties": {
+					"result": {
+						"type": "object"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			},
+			"DeleteItem": {
+				"additionalProperties": false,
+				"description": "Deleted Item object",
+				"properties": {
+					"error": {
+						"additionalProperties": false,
+						"description": "Error object",
+						"properties": {
+							"code": {
+								"description": "Error code",
+								"minimum": 0,
+								"type": "integer"
+							},
+							"message": {
+								"description": "Error message",
+								"type": "string"
+							}
+						},
+						"required": [
+							"code",
+							"message"
+						],
+						"type": "object"
+					},
+					"result": {
+						"nullable": true,
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			},
+			"Error": {
+				"additionalProperties": false,
+				"description": "Error object",
+				"properties": {
+					"code": {
+						"description": "Error code",
+						"minimum": 0,
+						"type": "integer"
+					},
+					"message": {
+						"description": "Error message",
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"message"
+				],
+				"type": "object"
+			},
+			"Health": {
+				"additionalProperties": false,
+				"description": "Health object",
+				"properties": {
+					"result": {
+						"additionalProperties": false,
+						"properties": {
+							"commit": {
+								"description": "Commit hash",
+								"example": "946b88f",
+								"minLength": 7,
+								"type": "string"
+							},
+							"error_reporting": {
+								"description": "Will the application send any error reporting?",
+								"example": true,
+								"type": "boolean"
+							},
+							"healthy": {
+								"description": "Healthy?",
+								"example": true,
+								"type": "boolean"
+							},
+							"setup": {
+								"description": "Is the application set up?",
+								"example": true,
+								"type": "boolean"
+							},
+							"version": {
+								"description": "Version",
+								"example": "3.0.0",
+								"minLength": 1,
+								"type": "string"
+							}
+						},
+						"required": [
+							"version",
+							"commit",
+							"healthy",
+							"setup",
+							"error_reporting"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			},
+			"Setting": {
+				"additionalProperties": false,
+				"description": "Setting object",
+				"properties": {
+					"result": {
+						"additionalProperties": false,
+						"properties": {
+							"id": {
+								"minimum": 1,
+								"type": "integer"
+							},
+							"name": {
+								"maxLength": 100,
+								"minLength": 2,
+								"type": "string"
+							},
+							"value": {
+								"anyOf": [
+									{
+										"type": "array"
+									},
+									{
+										"type": "boolean"
+									},
+									{
+										"type": "object"
+									},
+									{
+										"type": "integer"
+									}
+								]
+							}
+						},
+						"required": [
+							"id",
+							"name",
+							"value"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			},
+			"SettingList": {
+				"additionalProperties": false,
+				"description": "SettingList object",
+				"properties": {
+					"result": {
+						"additionalProperties": false,
+						"properties": {
+							"items": {
+								"items": {
+									"additionalProperties": false,
+									"properties": {
+										"id": {
+											"minimum": 1,
+											"type": "integer"
+										},
+										"name": {
+											"maxLength": 100,
+											"minLength": 2,
+											"type": "string"
+										},
+										"value": {
+											"anyOf": [
+												{
+													"type": "array"
+												},
+												{
+													"type": "boolean"
+												},
+												{
+													"type": "object"
+												},
+												{
+													"type": "integer"
+												}
+											]
+										}
+									},
+									"required": [
+										"id",
+										"name",
+										"value"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							},
+							"limit": {
+								"description": "Pagination Limit",
+								"type": "integer"
+							},
+							"offset": {
+								"description": "Pagination Offset",
+								"type": "integer"
+							},
+							"sort": {
+								"description": "Sorting",
+								"items": {
+									"additionalProperties": false,
+									"description": "Sort object",
+									"properties": {
+										"direction": {
+											"description": "Sort order",
+											"pattern": "^(ASC|DESC)$",
+											"type": "string"
+										},
+										"field": {
+											"description": "Field for sorting on",
+											"type": "string"
+										}
+									},
+									"required": [
+										"field",
+										"direction"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							},
+							"total": {
+								"description": "Total number of rows",
+								"type": "integer"
+							}
+						},
+						"required": [
+							"total",
+							"offset",
+							"limit",
+							"sort"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			},
+			"Sort": {
+				"additionalProperties": false,
+				"description": "Sort object",
+				"properties": {
+					"direction": {
+						"description": "Sort order",
+						"pattern": "^(ASC|DESC)$",
+						"type": "string"
+					},
+					"field": {
+						"description": "Field for sorting on",
+						"type": "string"
+					}
+				},
+				"required": [
+					"field",
+					"direction"
+				],
+				"type": "object"
+			},
+			"Token": {
+				"additionalProperties": false,
+				"description": "Token object",
+				"properties": {
+					"result": {
+						"additionalProperties": false,
+						"properties": {
+							"expires": {
+								"description": "Token Expiry Unix Time",
+								"example": 1566540249,
+								"minimum": 1,
+								"type": "number"
+							},
+							"token": {
+								"description": "JWT Token",
+								"example": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4",
+								"type": "string"
+							}
+						},
+						"required": [
+							"expires",
+							"token"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			},
+			"User": {
+				"additionalProperties": false,
+				"description": "User object",
+				"properties": {
+					"error": {
+						"additionalProperties": false,
+						"description": "Error object",
+						"properties": {
+							"code": {
+								"description": "Error code",
+								"minimum": 0,
+								"type": "integer"
+							},
+							"message": {
+								"description": "Error message",
+								"type": "string"
+							}
+						},
+						"required": [
+							"code",
+							"message"
+						],
+						"type": "object"
+					},
+					"result": {
+						"additionalProperties": false,
+						"nullable": true,
+						"properties": {
+							"auth": {
+								"properties": {
+									"id": {
+										"type": "integer"
+									},
+									"type": {
+										"pattern": "^password$",
+										"type": "string"
+									}
+								},
+								"required": [
+									"type"
+								],
+								"type": "object"
+							},
+							"created_on": {
+								"minimum": 1,
+								"type": "integer"
+							},
+							"email": {
+								"maxLength": 150,
+								"minLength": 5,
+								"type": "string"
+							},
+							"id": {
+								"minimum": 1,
+								"type": "integer"
+							},
+							"is_deleted": {
+								"type": "boolean"
+							},
+							"is_disabled": {
+								"type": "boolean"
+							},
+							"modified_on": {
+								"minimum": 1,
+								"type": "integer"
+							},
+							"name": {
+								"maxLength": 100,
+								"minLength": 2,
+								"type": "string"
+							},
+							"nickname": {
+								"maxLength": 100,
+								"minLength": 2,
+								"type": "string"
+							},
+							"roles": {
+								"items": {
+									"minLength": 2,
+									"type": "string"
+								},
+								"type": "array"
+							}
+						},
+						"required": [
+							"id",
+							"name",
+							"nickname",
+							"email",
+							"created_on",
+							"modified_on",
+							"roles",
+							"is_disabled"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			},
+			"UserList": {
+				"additionalProperties": false,
+				"description": "UserList object",
+				"properties": {
+					"result": {
+						"additionalProperties": false,
+						"properties": {
+							"items": {
+								"items": {
+									"additionalProperties": false,
+									"properties": {
+										"auth": {
+											"properties": {
+												"id": {
+													"type": "integer"
+												},
+												"type": {
+													"pattern": "^password$",
+													"type": "string"
+												}
+											},
+											"required": [
+												"type"
+											],
+											"type": "object"
+										},
+										"created_on": {
+											"minimum": 1,
+											"type": "integer"
+										},
+										"email": {
+											"maxLength": 150,
+											"minLength": 5,
+											"type": "string"
+										},
+										"id": {
+											"minimum": 1,
+											"type": "integer"
+										},
+										"is_deleted": {
+											"type": "boolean"
+										},
+										"is_disabled": {
+											"type": "boolean"
+										},
+										"modified_on": {
+											"minimum": 1,
+											"type": "integer"
+										},
+										"name": {
+											"maxLength": 100,
+											"minLength": 2,
+											"type": "string"
+										},
+										"nickname": {
+											"maxLength": 100,
+											"minLength": 2,
+											"type": "string"
+										},
+										"roles": {
+											"items": {
+												"minLength": 2,
+												"type": "string"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"id",
+										"name",
+										"nickname",
+										"email",
+										"created_on",
+										"modified_on",
+										"roles",
+										"is_disabled"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							},
+							"limit": {
+								"description": "Pagination Limit",
+								"type": "integer"
+							},
+							"offset": {
+								"description": "Pagination Offset",
+								"type": "integer"
+							},
+							"sort": {
+								"description": "Sorting",
+								"items": {
+									"additionalProperties": false,
+									"description": "Sort object",
+									"properties": {
+										"direction": {
+											"description": "Sort order",
+											"pattern": "^(ASC|DESC)$",
+											"type": "string"
+										},
+										"field": {
+											"description": "Field for sorting on",
+											"type": "string"
+										}
+									},
+									"required": [
+										"field",
+										"direction"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							},
+							"total": {
+								"description": "Total number of rows",
+								"type": "integer"
+							}
+						},
+						"required": [
+							"total",
+							"offset",
+							"limit",
+							"sort"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object"
+			}
+		}
+	}
+}

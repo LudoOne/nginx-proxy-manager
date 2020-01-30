@@ -11,6 +11,6 @@
 	"videosFolder": "/results/videos",
 	"screenshotsFolder": "/results/screenshots",
 	"env": {
-		"swaggerFile": "{{baseUrl}}/api/schema"
+		"swaggerBase": "{{baseUrl}}/api/schema"
 	}
 }

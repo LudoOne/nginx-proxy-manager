@@ -6,9 +6,6 @@ cd /app || echo
 
 if [ "$DEVELOPMENT" == "true" ]; then
 	cd /app/backend || exit 1
-	echo "======================="
-	ls -la
-	echo "======================="
 	yarn install
 	node --max_old_space_size=250 --abort_on_uncaught_exception node_modules/nodemon/bin/nodemon.js
 else

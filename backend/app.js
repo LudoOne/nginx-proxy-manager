@@ -29,10 +29,6 @@ if (process.env.NODE_ENV !== 'production') {
     app.set('json spaces', 2);
 }
 
-// set the view engine to ejs
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '/views'));
-
 // CORS for everything
 app.use(require('./lib/express/cors'));
 
@@ -56,19 +52,8 @@ app.use(function (req, res, next) {
     next();
 });
 
-// ATTACH JWT value - FOR ANY RATE LIMITERS and JWT DECODE
 app.use(require('./lib/express/jwt')());
-
-/**
- * Routes
- */
-app.use('/assets', express.static('frontend/assets'));
-app.use('/css', express.static('frontend/css'));
-app.use('/fonts', express.static('frontend/fonts'));
-app.use('/images', express.static('frontend/images'));
-app.use('/js', express.static('frontend/js'));
-app.use('/api', require('./routes/api/main'));
-app.use('/', require('./routes/main'));
+app.use('/', require('./routes/api/main'));
 
 // production error handler
 // no stacktraces leaked to user
@@ -91,8 +76,8 @@ app.use(function (err, req, res, next) {
     // Not every error is worth logging - but this is good for now until it gets annoying.
     if (typeof err.stack !== 'undefined' && err.stack) {
         if (process.env.NODE_ENV === 'development') {
-            log.warn(err.stack);
-        } else {
+            log.debug(err.stack);
+        } else if (typeof err.public == 'undefined' || !err.public) {
             log.warn(err.message);
         }
     }

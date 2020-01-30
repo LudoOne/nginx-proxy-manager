@@ -2,7 +2,6 @@ const Mn        = require('backbone.marionette');
 const LoginView = require('./ui/login');
 
 const App = Mn.Application.extend({
-
     region: '#login',
     UI:     null,
 
