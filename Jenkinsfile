@@ -80,6 +80,7 @@ pipeline {
 					// Dumps to analyze later
 					sh 'mkdir -p debug'
 					sh 'docker-compose logs fullstack | gzip > debug/docker_fullstack.log.gz'
+					sh 'docker-compose down -v --remove-orphans'
 				}
 			}
 		}
@@ -121,7 +122,6 @@ pipeline {
 	}
 	post {
 		always {
-			sh 'docker-compose down -v --remove-orphans'
 			sh 'echo Reverting ownership'
 			sh 'docker run --rm -v $(pwd):/data ${DOCKER_CI_TOOLS} chown -R $(id -u):$(id -g) /data'
 		}
