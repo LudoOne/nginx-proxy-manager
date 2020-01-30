@@ -15,8 +15,25 @@ pipeline {
 		COMPOSE_INTERACTIVE_NO_CLI = 1
 		BUILDX_NAME                = "${COMPOSE_PROJECT_NAME}"
 		BRANCH_LOWER               = "${BRANCH_NAME.toLowerCase()}"
+
+		// Defaults to the Branch name, which is applies to all branches AND pr's
+		BUILDX_PUSH_TAGS           = "-t docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}"
 	}
 	stages {
+		stage('Environment') {
+			parallel {
+				stage('Master') {
+					when {
+						branch 'master'
+					}
+					steps {
+						script {
+							env.BUILDX_PUSH_TAGS = "-t docker.io/jc21/${IMAGE}:${BUILD_VERSION} -t docker.io/jc21/${IMAGE}:${MAJOR_VERSION}"
+						}
+					}
+				}
+			}
+		}
 		stage('Frontend') {
 			steps {
 				ansiColor('xterm') {
@@ -66,7 +83,25 @@ pipeline {
 				}
 			}
 		}
-		stage('Pull Request') {
+		stage('MultiArch Build') {
+			when {
+				not {
+					equals expected: 'UNSTABLE', actual: currentBuild.result
+				}
+			}
+			steps {
+				ansiColor('xterm') {
+					withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
+						sh "docker login -u '${duser}' -p '${dpass}'"
+						// Buildx to local files
+						sh './scripts/buildx -o type=local,dest=docker-build'
+						// Buildx to with push
+						sh "./scripts/buildx --push ${BUILDX_PUSH_TAGS}"
+					}
+				}
+			}
+		}
+		stage('PR Comment') {
 			when {
 				allOf {
 					changeRequest()
@@ -77,60 +112,8 @@ pipeline {
 			}
 			steps {
 				ansiColor('xterm') {
-					// Dockerhub
-					sh 'docker tag ${IMAGE}:ci-${BUILD_NUMBER} docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}-amd64'
-					withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-						sh "docker login -u '${duser}' -p '${dpass}'"
-						sh 'docker push docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}-amd64'
-					}
-
 					script {
-						def comment = pullRequest.comment("Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/jc21/${IMAGE}) as `jc21/${IMAGE}:github-${BRANCH_LOWER}-amd64`")
-					}
-				}
-			}
-			post {
-				always {
-					sh 'docker rmi docker.io/jc21/${IMAGE}:github-${BRANCH_LOWER}-amd64'
-				}
-			}
-		}
-		stage('TestBuildX') {
-			when {
-				allOf {
-					branch 'docker-multi'
-					not {
-						equals expected: 'UNSTABLE', actual: currentBuild.result
-					}
-				}
-			}
-			steps {
-				ansiColor('xterm') {
-					withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-						sh "docker login -u '${duser}' -p '${dpass}'"
-						// Buildx to with push
-						sh './scripts/buildx --push -t docker.io/jc21/${IMAGE}:docker-multi'
-					}
-				}
-			}
-		}
-		stage('MultiArch Build') {
-			when {
-				allOf {
-					branch 'master'
-					not {
-						equals expected: 'UNSTABLE', actual: currentBuild.result
-					}
-				}
-			}
-			steps {
-				ansiColor('xterm') {
-					withCredentials([usernamePassword(credentialsId: 'jc21-dockerhub', passwordVariable: 'dpass', usernameVariable: 'duser')]) {
-						sh "docker login -u '${duser}' -p '${dpass}'"
-						// Buildx to local files
-						sh './scripts/buildx -o type=local,dest=docker-build'
-						// Buildx to with push
-						sh './scripts/buildx --push -t docker.io/jc21/${IMAGE}:${BUILD_VERSION} -t docker.io/jc21/${IMAGE}:${MAJOR_VERSION}'
+						def comment = pullRequest.comment("Docker Image for build ${BUILD_NUMBER} is available on [DockerHub](https://cloud.docker.com/repository/docker/jc21/${IMAGE}) as `jc21/${IMAGE}:github-${BRANCH_LOWER}`")
 					}
 				}
 			}
