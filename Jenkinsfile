@@ -62,7 +62,10 @@ pipeline {
 				ansiColor('xterm') {
 					// Bring up a stack
 					sh 'docker-compose up -d fullstack'
-					sleep 12
+
+					// TODO: implement docker healthcheck instead of this
+					sleep 45
+
 					// Run tests
 					sh 'rm -rf test/results'
 					sh 'docker-compose up --force-recreate cypress'
@@ -80,7 +83,7 @@ pipeline {
 					// Dumps to analyze later
 					sh 'mkdir -p debug'
 					sh 'docker-compose logs fullstack | gzip > debug/docker_fullstack.log.gz'
-					//sh 'docker-compose down -v --remove-orphans'
+					sh 'docker-compose down -v --remove-orphans'
 				}
 			}
 		}
