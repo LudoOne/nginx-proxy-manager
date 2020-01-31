@@ -8,9 +8,11 @@ describe('Basic API checks', () => {
 	});
 
 	it('Should return a valid health payload', function () {
-		cy.request('/api/').then(data => {
-			expect(data.status, 'response status should equal 200').to.equal(200);
-			cy.validateSwaggerSchema('get', '/', data.body);
+		cy.task('backendApiGet', {
+			path: '/api/',
+		}).then((data) => {
+			// Check the swagger schema:
+			cy.validateSwaggerSchema('get', '/', data);
 		});
 	});
 });

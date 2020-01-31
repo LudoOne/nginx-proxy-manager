@@ -1,4 +1,3 @@
-const fs      = require('fs');
 const logger  = require('./logger');
 const restler = require('@jc21/restler');
 
@@ -21,12 +20,16 @@ BackendApi.prototype.setToken = function(token) {
  */
 BackendApi.prototype.get = function(path, returnOnError) {
 	return new Promise((resolve, reject) => {
+		let headers = {
+			Accept: 'application/json'
+		};
+		if (this.token) {
+			headers.Authorization = 'Bearer ' + this.token;
+		}
+
 		restler
 			.get(this.config.baseUrl + path, {
-				headers: {
-					Accept:        'application/json',
-					Authorization: 'Bearer ' + this.token,
-				},
+				headers: headers,
 			})
 			.on('complete', function(data, response) {
 				logger('Response data:', data);
@@ -52,12 +55,16 @@ BackendApi.prototype.get = function(path, returnOnError) {
  */
 BackendApi.prototype.delete = function(path, returnOnError) {
 	return new Promise((resolve, reject) => {
+		let headers = {
+			Accept: 'application/json'
+		};
+		if (this.token) {
+			headers.Authorization = 'Bearer ' + this.token;
+		}
+
 		restler
 			.del(this.config.baseUrl + path, {
-				headers: {
-					Accept:        'application/json',
-					Authorization: 'Bearer ' + this.token,
-				},
+				headers: headers,
 			})
 			.on('complete', function(data, response) {
 				logger('Response data:', data);

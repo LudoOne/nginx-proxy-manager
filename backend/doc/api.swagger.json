@@ -508,7 +508,7 @@
 									}
 								},
 								"schema": {
-									"$ref": "#/components/schemas/UsersObject"
+									"$ref": "#/components/schemas/UserObject"
 								}
 							}
 						}
