@@ -61,12 +61,12 @@ pipeline {
 			steps {
 				ansiColor('xterm') {
 					// Bring up a stack
-					sh 'docker-compose up -d fullstack --no-ansi'
+					sh 'docker-compose up -d fullstack'
 					sh './scripts/wait-healthy $(docker-compose ps -q fullstack)'
 
 					// Run tests
 					sh 'rm -rf test/results'
-					sh 'docker-compose up --force-recreate cypress --no-ansi'
+					sh 'docker-compose up --force-recreate cypress'
 					// Get results
 					sh 'docker cp -L "$(docker-compose ps -q cypress):/results" test/'
 				}
@@ -81,7 +81,7 @@ pipeline {
 					// Dumps to analyze later
 					sh 'mkdir -p debug'
 					sh 'docker-compose logs fullstack | gzip > debug/docker_fullstack.log.gz'
-					//sh 'docker-compose down -v --remove-orphans --no-ansi'
+					//sh 'docker-compose down -v --remove-orphans'
 				}
 			}
 		}
