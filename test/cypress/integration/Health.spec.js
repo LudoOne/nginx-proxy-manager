@@ -10,6 +10,7 @@ describe('Basic API checks', () => {
 	});
 
 	it('Should return a valid health payload', function () {
+		cy.wait(60000);
 		cy.task('backendApiGet', {
 			path: '/api/',
 		}).then((data) => {

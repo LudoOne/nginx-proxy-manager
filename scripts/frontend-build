@@ -10,7 +10,7 @@ RESET='\E[0m'
 
 DOCKER_IMAGE=jc21/alpine-nginx-full:node
 
-# Ensure docker-compose exists
+# Ensure docker exists
 if hash docker 2>/dev/null; then
 	cd "${DIR}/.."
 	echo -e "${BLUE}❯ ${CYAN}Building Frontend ...${RESET}"
