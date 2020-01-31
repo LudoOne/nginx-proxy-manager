@@ -835,6 +835,82 @@
 					}
 				}
 			}
+		},
+		"/reports/hosts": {
+			"get": {
+				"operationId": "reportsHosts",
+				"summary": "Report on Host Statistics",
+				"tags": [
+					"Reports"
+				],
+				"security": [
+					{
+						"BearerAuth": [
+							"reports"
+						]
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "200 response",
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"proxy": 20,
+											"redirection": 1,
+											"stream": 0,
+											"dead": 1
+										}
+									}
+								},
+								"schema": {
+									"$ref": "#/components/schemas/HostReportObject"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/audit-log": {
+			"get": {
+				"operationId": "getAuditLog",
+				"summary": "Get Audit Log",
+				"tags": [
+					"Audit Log"
+				],
+				"security": [
+					{
+						"BearerAuth": [
+							"audit-log"
+						]
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "200 response",
+						"content": {
+							"application/json": {
+								"examples": {
+									"default": {
+										"value": {
+											"proxy": 20,
+											"redirection": 1,
+											"stream": 0,
+											"dead": 1
+										}
+									}
+								},
+								"schema": {
+									"$ref": "#/components/schemas/HostReportObject"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -1149,6 +1225,27 @@
 							"view",
 							"manage"
 						]
+					}
+				}
+			},
+			"HostReportObject": {
+				"type": "object",
+				"properties": {
+					"proxy": {
+						"type": "integer",
+						"description": "Proxy Hosts Count"
+					},
+					"redirection": {
+						"type": "integer",
+						"description": "Redirection Hosts Count"
+					},
+					"stream": {
+						"type": "integer",
+						"description": "Streams Count"
+					},
+					"dead": {
+						"type": "integer",
+						"description": "404 Hosts Count"
 					}
 				}
 			}

@@ -37,13 +37,11 @@
     "underscore": "^1.9.2",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1",
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "scripts": {
     "build": "webpack --mode production",
-    "watch": "webpack --watch --mode development",
-    "start": "webpack-dev-server --mode development"
+    "watch": "webpack --watch --mode development"
   },
   "author": "Jamie Curnow <jc@jc21.com>",
   "license": "MIT"

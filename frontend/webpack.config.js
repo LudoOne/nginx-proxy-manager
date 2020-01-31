@@ -128,13 +128,5 @@ module.exports = {
 			toType:  'dir',
 			context: '/app/frontend'
 		}])
-	],
-	devServer: {
-		contentBase: path.resolve(__dirname, 'dist'),
-		compress:    true,
-		port:        9000,
-		index:      'index.html',
-		open:       false,
-		public:     '127.0.0.1:3081'
-	}
+	]
 };
