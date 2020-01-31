@@ -62,7 +62,7 @@ pipeline {
 				ansiColor('xterm') {
 					// Bring up a stack
 					sh 'docker-compose up -d fullstack'
-					sleep 20
+					sleep 12
 					// Run tests
 					sh 'rm -rf test/results'
 					sh 'docker-compose up --force-recreate cypress'

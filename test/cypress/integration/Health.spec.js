@@ -2,13 +2,14 @@
 
 describe('Basic API checks', () => {
 	it('Should return a valid schema payload', function () {
-		cy.request('/api/schema').then(data => {
-			expect(data.status, 'response status should equal 200').to.equal(200);
+		cy.task('backendApiGet', {
+			path: '/api/schema',
+		}).then((data) => {
+			expect(data.openapi).to.be.equal('3.0.0');
 		});
 	});
 
 	it('Should return a valid health payload', function () {
-		cy.wait(120000)
 		cy.task('backendApiGet', {
 			path: '/api/',
 		}).then((data) => {
