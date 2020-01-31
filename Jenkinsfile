@@ -62,9 +62,7 @@ pipeline {
 				ansiColor('xterm') {
 					// Bring up a stack
 					sh 'docker-compose up -d fullstack'
-
-					// TODO: implement docker healthcheck instead of this
-					sleep 45
+					sh './scripts/wait-healthy $(docker-compose ps -q fullstack)'
 
 					// Run tests
 					sh 'rm -rf test/results'
