@@ -39,8 +39,6 @@ services:
     command: cypress run --browser chrome --config-file=${CYPRESS_CONFIG:-cypress/config/ci.json}
     links:
       - fullstack
-    depends_on:
-      - fullstack
 
 volumes:
   cypress-logs:
