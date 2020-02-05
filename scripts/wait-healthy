@@ -16,6 +16,7 @@ fi
 SERVICE=$1
 LOOPCOUNT=0
 HEALTHY=
+LIMIT=${2:-90}
 
 echo -e "${BLUE}❯ ${CYAN}Waiting for healthy: ${YELLOW}${SERVICE}${RESET}"
 
@@ -25,7 +26,7 @@ until [ "${HEALTHY}" = "healthy" ]; do
 	HEALTHY="$(docker inspect -f '{{.State.Health.Status}}' $SERVICE)"
 	((LOOPCOUNT++))
 
-	if [ "$LOOPCOUNT" == "90" ]; then
+	if [ "$LOOPCOUNT" == "$LIMIT" ]; then
 		echo ""
 		echo ""
 		echo -e "${BLUE}❯ ${RED}Timed out waiting for healthy${RESET}"

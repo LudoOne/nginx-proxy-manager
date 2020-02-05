@@ -62,7 +62,7 @@ pipeline {
 				ansiColor('xterm') {
 					// Bring up a stack
 					sh 'docker-compose up -d fullstack'
-					sh './scripts/wait-healthy $(docker-compose ps -q fullstack)'
+					sh './scripts/wait-healthy $(docker-compose ps -q fullstack) 120'
 
 					// Run tests
 					sh 'rm -rf test/results'
